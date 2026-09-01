@@ -4,13 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STREAMBLOXD NETWORK</title>
+    <script src="https://jsdelivr.net"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         nav { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background-color: #0b0c10; border-b: 1px solid #1f242e; position: sticky; top: 0; z-index: 50; }
-        .nav-title { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 20px; }
-        .elite-input { padding: 8px 16px; background-color: #11141a; border: 1px solid #1f242e; color: #ffffff; font-size: 12px; font-family: monospace; width: 100%; }
+        .nav-title { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+        .elite-input { padding: 8px 16px; background-color: #11141a; border: 1px solid #1f242e; color: #ffffff; font-size: 12px; font-family: monospace; }
         .elite-input:focus { border-color: #ffffff; outline: none; }
+        .search-container { display: none; }
+        @media (min-width: 768px) { .search-container { display: flex; flex: 1; max-width: 500px; margin: 0 32px; } .elite-input { width: 100%; } }
         .upload-actions { display: flex; align-items: center; gap: 16px; }
         .elite-btn { border: 1px solid #ffffff; background-color: transparent; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; padding: 8px 24px; font-size: 12px; font-weight: bold; cursor: pointer; color: #ffffff; }
         .elite-btn:hover { background-color: #ffffff; color: #0b0c10; }
@@ -20,8 +23,11 @@
         .header-section { margin-bottom: 40px; max-width: 640px; border-left: 2px solid #ffffff; padding-left: 16px; }
         .header-section h1 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 30px; margin-bottom: 8px; }
         .header-section p { color: #a1a1aa; font-size: 14px; line-height: 1.6; }
-        #video-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .elite-card { background-color: #11141a; border: 1px solid #1f242e; display: flex; flex-direction: column; justify-content: space-between; width: 100%; overflow: hidden; transition: all 0.2s; }
+        #video-grid { width: 100%; display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 640px) { #video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { #video-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { #video-grid { grid-template-columns: repeat(4, 1fr); } }
+        .elite-card { background-color: #11141a; border: 1px solid #1f242e; transition: all 0.2s ease-in-out; display: flex; flex-direction: column; justify-content: space-between; width: 100%; overflow: hidden; }
         .elite-card:hover { border-color: #4f5b73; transform: translateY(-2px); }
         .elite-card video, .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; object-fit: cover; }
         .card-content { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
@@ -32,6 +38,7 @@
 <body>
     <nav>
         <div class="nav-title">👑 SHAHADAH STUDIOS ELITE - STREAMBLOXD</div>
+        <div class="search-container"><input type="text" placeholder="Search architecture database..." class="elite-input"></div>
         <div class="upload-actions"><button class="elite-btn" onclick="openModal()">Upload Link</button></div>
     </nav>
     <div id="link-modal">
@@ -53,27 +60,31 @@
         <div id="video-grid"></div>
     </main>
     <script>
-        const STORAGE_URL = "https://kvdb.io";
+        const SUPABASE_URL = "https://zagbvwxsgaqnqwkeeiyi.supabase.co";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphZ2J2d3hzZ2FxbnF3a2VlaXlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzU3MTIsImV4cCI6MjEwMzg1MTcxMn0.mGHuu8q_HnxpUmXeHVKBtVP6zZzzclw-FcYj5r1f6hU";
+        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const videoGrid = document.getElementById('video-grid');
         function openModal() { document.getElementById('link-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('link-modal').style.display = 'none'; }
+        function formatEmbedUrl(url) {
+            if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/');
+            if (url.includes('youtu.be/')) return url.replace('youtu.be/', '://youtube.com');
+            if (url.includes('://vimeo.com')) return url.replace('://vimeo.com', 'player.://vimeo.comvideo/');
+            return url;
+        }
         async function loadSharedLinks() {
             try {
-                const response = await fetch(STORAGE_URL);
-                if (!response.ok) throw new Error();
-                const links = await response.json();
-                if (!Array.isArray(links) || links.length === 0) throw new Error();
+                const { data: links, error } = await client.from('videos').select('*').order('created_at', { ascending: false });
+                if (error || !links || links.length === 0) throw new Error();
                 videoGrid.innerHTML = "";
-                links.reverse().forEach(item => {
+                links.forEach(item => {
                     const card = document.createElement('div');
                     card.className = "elite-card";
                     let mediaElement = "";
                     if (item.url.includes('.mp4') || item.url.includes('.mov')) {
                         mediaElement = `<video src="${item.url}" controls></video>`;
                     } else {
-                        let embedUrl = item.url;
-                        if (url.includes('watch?v=')) embedUrl = url.replace('watch?v=', 'embed/');
-                        if (url.includes('youtu.be/')) embedUrl = url.replace('youtu.be/', '://youtube.com');
+                        const embedUrl = formatEmbedUrl(item.url);
                         mediaElement = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
                     }
                     card.innerHTML = `${mediaElement}<div class="card-content"><h3>${item.title.toUpperCase()}</h3><p>SRC: ${item.url}</p></div>`;
@@ -88,25 +99,14 @@
             const urlInput = document.getElementById('stream-url').value.trim();
             if (!titleInput || !urlInput) return;
             try {
-                let currentLinks = [];
-                try {
-                    const getRes = await fetch(STORAGE_URL);
-                    if (getRes.ok) currentLinks = await getRes.json();
-                } catch (e) {}
-                if (!Array.isArray(currentLinks)) currentLinks = [];
-                currentLinks.push({ title: titleInput, url: urlInput });
-                const updateRes = await fetch(STORAGE_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(currentLinks)
-                });
-                if (updateRes.ok) {
+                const { error } = await client.from('videos').insert([{ title: titleInput, url: urlInput }]);
+                if (!error) {
                     closeModal();
                     document.getElementById('stream-title').value = "";
                     document.getElementById('stream-url').value = "";
                     loadSharedLinks();
                 } else {
-                    alert("Pipeline storage draw overflow. Try again.");
+                    alert("Pipeline storage draw overflow. Check RLS parameters.");
                 }
             } catch (e) {
                 alert("Network boundary block.");
@@ -117,20 +117,5 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
