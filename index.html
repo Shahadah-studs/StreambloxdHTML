@@ -39,10 +39,10 @@
 <body>
     <nav>
         <div class="nav-title">
-            <span>👑</span> SHAHADAH STUDIOS ELITE - StreamBloxd
+            <span>👑</span> SHAHADAH STUDIOS ELITE - STREAMBLOXD
         </div>
         <div class="search-container">
-            <input type="text" placeholder="Search database..." class="elite-input">
+            <input type="text" placeholder="Search architecture database..." class="elite-input">
         </div>
         <div class="upload-actions">
             <label for="video-input" class="elite-btn">Upload Core</label>
@@ -67,12 +67,12 @@
         const uploadStatus = document.getElementById('upload-status');
         async function loadPublicVideos() {
             try {
-                const response = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/video/list/project_youtube_clone.json`);
+                const response = await fetch(`https://cloudinary.com{CLOUD_NAME}/video/list/project_youtube_clone.json`);
                 if (!response.ok) throw new Error();
                 const data = await response.json();
                 videoGrid.innerHTML = "";
                 data.resources.forEach(video => {
-                    const videoUrl = `https://res.cloudinary.com/${CLOUD_NAME}/video/upload/v${video.version}/${video.public_id}.${video.format}`;
+                    const videoUrl = `https://cloudinary.com{CLOUD_NAME}/video/upload/v${video.version}/${video.public_id}.${video.format}`;
                     const videoCard = document.createElement('div');
                     videoCard.className = "elite-card";
                     videoCard.innerHTML = `
@@ -89,34 +89,34 @@
                 videoGrid.innerHTML = `<div class="error-message">No active transmissions stored in the local cloud grid pipeline.</div>`;
             }
         }
-        videoInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (!file) return;
+        videoInput.addEventListener('change', async function() {
+            const files = this.files;
+            if (!files || files.length === 0) return;
             uploadStatus.style.display = 'block';
             const formData = new FormData();
-            formData.append('file', file);
+            formData.append('file', files[0]);
             formData.append('upload_preset', UPLOAD_PRESET);
             formData.append('tags', 'project_youtube_clone');
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', `https://cloudinary.com{CLOUD_NAME}/video/upload`, true);
-            xhr.onload = function() {
-                uploadStatus.style.display = 'none';
-                videoInput.value = "";
-                if (xhr.status === 200) {
+            try {
+                const response = await fetch(`https://cloudinary.com{CLOUD_NAME}/video/upload`, {
+                    method: 'POST',
+                    body: formData
+                });
+                if (response.ok) {
                     loadPublicVideos();
                 } else {
                     alert("Upload architecture payload dropped.");
                 }
-            };
-            xhr.onerror = function() {
+            } catch (error) {
+                alert("Network structure fault.");
+            } finally {
                 uploadStatus.style.display = 'none';
                 videoInput.value = "";
-                alert("Network structure fault.");
-            };
-            xhr.send(formData);
+            }
         });
         loadPublicVideos();
         setInterval(loadPublicVideos, 15000);
     </script>
 </body>
 </html>
+
