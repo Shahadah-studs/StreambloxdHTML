@@ -61,7 +61,7 @@
     </main>
     <script>
         const SUPABASE_URL = "https://zagbvwxsgaqnqwkeeiyi.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphZ2J2d3hzZ2FxbnF3a2VlaXlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzU3MTIsImV4cCI6MjEwMzg1MTcxMn0.mGHuu8q_HnxpUmXeHVKBtVP6zZzzclw-FcYj5r1f6hU";
+        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphZ2J2d3hzZ2FxbnF3a2VlaXlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzU3MTIsImV4cCI6MjExMzg1MTcxMn0.mGHuu8q_HnxpUmXeHVKBtVP6zZzzclw-FcYj5r1f6hU";
         const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const videoGrid = document.getElementById('video-grid');
         function openModal() { document.getElementById('link-modal').style.display = 'flex'; }
@@ -74,10 +74,14 @@
         }
         async function loadSharedLinks() {
             try {
-                const { data: links, error } = await client.from('videos').select('*').order('created_at', { ascending: false });
-                if (error || !links || links.length === 0) throw new Error();
+                const { data: links, error } = await client.from('videos').select('*');
+                if (error) {
+                    alert("Load Error: " + JSON.stringify(error));
+                    throw error;
+                }
+                if (!links || links.length === 0) throw new Error();
                 videoGrid.innerHTML = "";
-                links.forEach(item => {
+                links.reverse().forEach(item => {
                     const card = document.createElement('div');
                     card.className = "elite-card";
                     let mediaElement = "";
@@ -106,10 +110,10 @@
                     document.getElementById('stream-url').value = "";
                     loadSharedLinks();
                 } else {
-                    alert("Pipeline storage draw overflow. Check RLS parameters.");
+                    alert("Supabase Core Error:\n" + JSON.stringify(error));
                 }
             } catch (e) {
-                alert("Network boundary block.");
+                alert("Browser Network Exception: " + e.message);
             }
         }
         loadSharedLinks();
@@ -117,5 +121,6 @@
     </script>
 </body>
 </html>
+
 
 
