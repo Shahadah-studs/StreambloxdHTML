@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STREAMBLOXD NETWORK</title>
-    <script src="https://jsdelivr.net"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
@@ -14,9 +13,11 @@
         .elite-input:focus { border-color: #ffffff; outline: none; }
         .search-container { display: none; }
         @media (min-width: 768px) { .search-container { display: flex; flex: 1; max-width: 500px; margin: 0 32px; } .elite-input { width: 100%; } }
-        .upload-actions { display: flex; align-items: center; gap: 16px; }
+        .upload-actions { display: flex; align-items: center; gap: 12px; }
         .elite-btn { border: 1px solid #ffffff; background-color: transparent; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; padding: 8px 24px; font-size: 12px; font-weight: bold; cursor: pointer; color: #ffffff; }
         .elite-btn:hover { background-color: #ffffff; color: #0b0c10; }
+        .share-btn { border-color: #a1a1aa; color: #a1a1aa; }
+        .share-btn:hover { background-color: #a1a1aa; color: #0b0c10; }
         #link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 16, 0.95); z-index: 100; align-items: center; justify-content: center; }
         .modal-content { background: #11141a; border: 1px solid #1f242e; padding: 32px; width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; }
         main { width: 100%; max-width: 1400px; padding: 48px 32px; display: flex; flex-direction: column; align-items: flex-start; }
@@ -29,23 +30,26 @@
         @media (min-width: 1024px) { #video-grid { grid-template-columns: repeat(4, 1fr); } }
         .elite-card { background-color: #11141a; border: 1px solid #1f242e; transition: all 0.2s ease-in-out; display: flex; flex-direction: column; justify-content: space-between; width: 100%; overflow: hidden; }
         .elite-card:hover { border-color: #4f5b73; transform: translateY(-2px); }
-        .elite-card video, .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; object-fit: cover; }
+        .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; }
         .card-content { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
         .card-content h3 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 14px; color: #f4f4f5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-content p { font-size: 11px; color: #a1a1aa; font-family: monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .card-content p { font-size: 12px; color: #a1a1aa; font-family: monospace; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     </style>
 </head>
 <body>
     <nav>
         <div class="nav-title">👑 SHAHADAH STUDIOS ELITE - STREAMBLOXD</div>
         <div class="search-container"><input type="text" placeholder="Search architecture database..." class="elite-input"></div>
-        <div class="upload-actions"><button class="elite-btn" onclick="openModal()">Upload Link</button></div>
+        <div class="upload-actions">
+            <button class="elite-btn share-btn" onclick="copyCurrentRegistry()">Share Feed</button>
+            <button class="elite-btn" onclick="openModal()">Upload Core</button>
+        </div>
     </nav>
     <div id="link-modal">
         <div class="modal-content">
-            <h2 style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 16px;">Inject Media Stream</h2>
+            <h2 style="text-transform: uppercase; letter-spacing: 0.05em; font-size: 16px;">Inject Iframe Stream</h2>
             <input type="text" id="stream-title" placeholder="Enter stream title..." class="elite-input">
-            <input type="text" id="stream-url" placeholder="Paste YouTube link or direct MP4 URL..." class="elite-input">
+            <input type="text" id="stream-url" placeholder="Paste YouTube link..." class="elite-input">
             <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
                 <button class="elite-btn" style="padding: 6px 16px;" onclick="closeModal()">Cancel</button>
                 <button class="elite-btn" style="padding: 6px 16px; background-color: #ffffff; color: #0b0c10;" onclick="submitLink()">Inject</button>
@@ -55,14 +59,11 @@
     <main>
         <div class="header-section">
             <h1>Standalone Video Pipeline</h1>
-            <p>High-performance global media architecture built with zero local data overhead configuration keys.</p>
+            <p>High-performance, network-driven iframe architectures built with zero local data overhead files.</p>
         </div>
         <div id="video-grid"></div>
     </main>
     <script>
-        const SUPABASE_URL = "https://zagbvwxsgaqnqwkeeiyi.supabase.co";
-        const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InphZ2J2d3hzZ2FxbnF3a2VlaXlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgyNzU3MTIsImV4cCI6MjExMzg1MTcxMn0.mGHuu8q_HnxpUmXeHVKBtVP6zZzzclw-FcYj5r1f6hU";
-        const client = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const videoGrid = document.getElementById('video-grid');
         function openModal() { document.getElementById('link-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('link-modal').style.display = 'none'; }
@@ -72,52 +73,54 @@
             if (url.includes('://vimeo.com')) return url.replace('://vimeo.com', 'player.://vimeo.comvideo/');
             return url;
         }
-        async function loadSharedLinks() {
+        function loadSharedLinks() {
+            const params = new URLSearchParams(window.location.search);
+            const rawData = params.get('data');
+            if (!rawData) {
+                videoGrid.innerHTML = '<div style="grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #71717a; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase;">Pipeline static link array clear. Click Upload Core to share a video.</div>';
+                return;
+            }
             try {
-                const { data: links, error } = await client.from('videos').select('*');
-                if (error) {
-                    alert("Load Error: " + JSON.stringify(error));
-                    throw error;
-                }
-                if (!links || links.length === 0) throw new Error();
+                const links = JSON.parse(atob(decodeURIComponent(rawData)));
                 videoGrid.innerHTML = "";
                 links.reverse().forEach(item => {
+                    const embedUrl = formatEmbedUrl(item.url);
                     const card = document.createElement('div');
                     card.className = "elite-card";
-                    let mediaElement = "";
-                    if (item.url.includes('.mp4') || item.url.includes('.mov')) {
-                        mediaElement = `<video src="${item.url}" controls></video>`;
-                    } else {
-                        const embedUrl = formatEmbedUrl(item.url);
-                        mediaElement = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
-                    }
-                    card.innerHTML = `${mediaElement}<div class="card-content"><h3>${item.title.toUpperCase()}</h3><p>SRC: ${item.url}</p></div>`;
+                    card.innerHTML = `
+                        <iframe src="${embedUrl}" allowfullscreen></iframe>
+                        <div class="card-content">
+                            <h3>${item.title.toUpperCase()}</h3>
+                            <p>SOURCE: ${item.url}</p>
+                        </div>
+                    `;
                     videoGrid.appendChild(card);
                 });
-            } catch (err) {
-                videoGrid.innerHTML = '<div style="grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #71717a; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase;">Pipeline media network stream clear. Add a vector to initialize.</div>';
+            } catch (e) {
+                videoGrid.innerHTML = '<div style="grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #ee5b5b; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase;">Pipeline data package corrupted.</div>';
             }
         }
-        async function submitLink() {
+        function submitLink() {
             const titleInput = document.getElementById('stream-title').value.trim();
             const urlInput = document.getElementById('stream-url').value.trim();
             if (!titleInput || !urlInput) return;
-            try {
-                const { error } = await client.from('videos').insert([{ title: titleInput, url: urlInput }]);
-                if (!error) {
-                    closeModal();
-                    document.getElementById('stream-title').value = "";
-                    document.getElementById('stream-url').value = "";
-                    loadSharedLinks();
-                } else {
-                    alert("Supabase Core Error:\n" + JSON.stringify(error));
-                }
-            } catch (e) {
-                alert("Browser Network Exception: " + e.message);
+            const params = new URLSearchParams(window.location.search);
+            const rawData = params.get('data');
+            let currentLinks = [];
+            if (rawData) {
+                try { currentLinks = JSON.parse(atob(decodeURIComponent(rawData))); } catch(e) {}
             }
+            currentLinks.push({ title: titleInput, url: urlInput });
+            const crypted = btoa(JSON.stringify(currentLinks));
+            window.location.href = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(crypted);
+            closeModal();
+        }
+        function copyCurrentRegistry() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Current video grid link copied to clipboard! Share this URL with your crew.");
+            });
         }
         loadSharedLinks();
-        setInterval(loadSharedLinks, 20000);
     </script>
 </body>
 </html>
