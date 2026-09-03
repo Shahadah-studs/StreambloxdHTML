@@ -49,7 +49,7 @@
         <div id="video-grid"></div>
     </main>
     <script>
-        const REG = "W3siYyI6IlNoYWhhZGFoX1N0dWRpb3MiLCJ0IjoiTG9jYWwgdGV4dCIsInUiOiJodHRwczovL3d3dy5pbWFnZTJ1cmwuY29tL3IyL2RlZmF1bHQvdmlkZW9zLzE3ODYzMTUwNDU3NTctM2NlYjczMjYtMDZjYy00MWI3LTk4NWEtMmIzZGM5NTc1YTFlLm1wNCJ9LHsiYyI6IkJsb3hkX0tpbmciLCJ0IjoiTG9jYWwgdGV4dDIiLCJ1IjoiaHR0cHM6Ly92aWRlb3RvdXJsLmNvbS92aWRlb3Rvcy8xNzg4MjgzNzc2OTA1LWZlMDdhMDIxLTQ4ZDAtNGZjOS1hNTcyLTUyMTI5ZTVhZjRlOS53ZWJtIn0seyJjIj6IlNoYWhhZGFoX1N0dWRpb3MiLCJ0IjoiQ29yZSBkZWZlbmRlciB3YXIgMiBwbGF5ZXJzIiwidSI6Imh0dHBzOi8vdmlkZW90b3VybC5jb20vdmlkZW9zLzE3ODgzMDQ0ODg3OTMtNDAwZmY3ZjQtYjNhNy00YzgyLThiZDctMzA1MjViMmIzZTA5Lm1wNCJ9XQ==";
+        const REG = "W3siYyI6IlNoYWhhZGFoX1N0dWRpb3MiLCJ0IjoiTG9jYWwgdGV4dCIsInUiOiJodHRwczovL3d3dy5pbWFnZTJ1cmwuY29tL3IyL2RlZmF1bHQvdmlkZW9zLzE3ODYzMTUwNDU3NTctM2NlYjczMjYtMDZjYy00MWI3LTk4NWEtMmIzZGM5NTc1YTFlLm1wNCJ9LHsiYyI6IkJsb3hkX0tpbmciLCJ0IjoiTG9jYWwgdGV4dDIiLCJ1IjoiaHR0cHM6Ly92aWRlb3RvdXJsLmNvbS92aWRlb3Rvcy8xNzg4MjgzNzc2OTA1LWZlMDdhMDIxLTQ4ZDAtNGZjOS1hNTcyLTUyMTI5ZTVhZjRlOS53ZWJtIn0seyJjIjoiU2hhaGFkYWhfU3R1ZGlvcyIsInQiOiJDb3JlIGRlZmVuZGVyIHdhciAyIHBsYXllcnMiLCJ1IjoiaHR0cHM6Ly92aWRlb3RvdXJsLmNvbS92aWRlb3JzLzE3ODgzMDQ0ODg3OTMtNDAwZmY3ZjQtYjNhNy00YzgyLThiZDctMzA1MjViMmIzZTA5Lm1wNCJ9XQ==";
         const grid = document.getElementById('video-grid');
         const openModal = () => document.getElementById('link-modal').style.display = 'flex';
         const closeModal = () => document.getElementById('link-modal').style.display = 'none';
@@ -66,7 +66,7 @@
                 let links = getLinks(), subs = JSON.parse(localStorage.getItem('sb_local_subs') || '[]');
                 links.sort((a, b) => (subs.includes(b.c) ? 1 : 0) - (subs.includes(a.c) ? 1 : 0));
                 grid.innerHTML = "";
-                links.forEach((item, idx) => {
+                links.forEach((item) => {
                     const card = document.createElement('div'); card.className = "elite-card";
                     let embed = item.u.includes('.mp4') || item.u.includes('.mov') || item.u.includes('.webm') ? 
                         `<video src="${item.u}" controls></video>` : `<iframe src="${item.u.replace('watch?v=', 'embed/').replace('youtu.be/', '://youtube.com')}" allowfullscreen></iframe>`;
@@ -81,11 +81,12 @@
             if (!t || !u) return;
             let links = getLinks(); links.push({ c: c, t: t, u: u });
             let finalUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(btoa(JSON.stringify(links)));
-            navigator.clipboard.writeText(finalUrl).then(() => { alert("Compressed link copied!"); window.location.href = finalUrl; }).catch(() => window.location.href = finalUrl);
+            navigator.clipboard.writeText(finalUrl).then(() => { window.location.href = finalUrl; }).catch(() => window.location.href = finalUrl);
             closeModal();
         }
         loadSharedLinks();
     </script>
 </body>
 </html>
+
 
