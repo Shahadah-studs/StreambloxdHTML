@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>STREAMBLOXD ELITE NETWORK</title><link rel="icon" type="image/png" href="favicon.png">
+    <title>STREAMBLOXD NETWORK</title><link rel="icon" type="image/png" href="favicon.png">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
@@ -18,8 +18,7 @@
         .header-section { margin-bottom: 40px; max-width: 640px; border-left: 2px solid #ffffff; padding-left: 16px; }
         .header-section h1 { text-transform: uppercase; font-size: 30px; margin-bottom: 8px; }
         #video-grid { width: 100%; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-        .elite-card { background-color: #11141a; border: 1px solid #1f242e; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; transition: all 0.2s; }
-        .elite-card:hover { border-color: #4f5b73; transform: translateY(-2px); }
+        .elite-card { background-color: #11141a; border: 1px solid #1f242e; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; }
         .elite-card video, .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; object-fit: cover; }
         .card-content { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
         .card-content h3 { text-transform: uppercase; font-weight: 800; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -29,52 +28,64 @@
     </style>
 </head>
 <body>
-    <nav><div class="nav-title">👑 STREAMBLOXD ELITE</div><button class="elite-btn" onclick="openModal()">Upload Link</button></nav>
-    <div id="link-modal"><div class="modal-content">
-        <h2>Inject Media Stream</h2>
-        <input type="text" id="stream-creator" placeholder="Creator Tag (e.g. Shahadah_Studios)..." class="elite-input">
-        <input type="text" id="stream-title" placeholder="Title..." class="elite-input">
-        <input type="text" id="stream-url" placeholder="YouTube or MP4 URL..." class="elite-input">
-        <div style="display: flex; gap: 12px; justify-content: flex-end;"><button class="elite-btn" onclick="closeModal()">Cancel</button><button class="elite-btn" style="background-color:#ffffff; color:#0b0c10;" onclick="submitLink()">Inject</button></div>
-    </div></div>
+    <nav>
+        <div class="nav-title">👑 STREAMBLOXD ELITE</div>
+        <button class="elite-btn" onclick="openModal()">Upload Link</button>
+    </nav>
+    <div id="link-modal">
+        <div class="modal-content">
+            <h2>Inject Media Stream</h2>
+            <input type="text" id="stream-creator" placeholder="Creator Tag (e.g. Shahadah_Studios)..." class="elite-input">
+            <input type="text" id="stream-title" placeholder="Title..." class="elite-input">
+            <input type="text" id="stream-url" placeholder="YouTube or MP4 URL..." class="elite-input">
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button class="elite-btn" onclick="closeModal()">Cancel</button>
+                <button class="elite-btn" style="background-color: #ffffff; color: #0b0c10;" onclick="submitLink()">Inject</button>
+            </div>
+        </div>
+    </div>
     <main>
-        <div class="header-section"><h1>Standalone Video Pipeline</h1><p style="color:#a1a1aa; font-size:14px;">BloxdWorldcode network video pipeline.</p></div>
+        <div class="header-section"><h1>Standalone Video Pipeline</h1><p style="color: #a1a1aa; font-size: 14px;">BloxdWorldcode network video pipeline.</p></div>
         <div id="video-grid"></div>
     </main>
     <script>
+        const REG = "W3siYyI6IlNoYWhhZGFoX1N0dWRpb3MiLCJ0IjoiTG9jYWwgdGV4dCIsInUiOiJodHRwczovL3d3dy5pbWFnZTJ1cmwuY29tL3IyL2RlZmF1bHQvdmlkZW9zLzE3ODYzMTUwNDU3NTctM2NlYjczMjYtMDZjYy00MWI3LTk4NWEtMmIzZGM5NTc1YTFlLm1wNCJ9LHsiYyI6IkJsb3hkX0tpbmciLCJ0IjoiTG9jYWwgdGV4dDIiLCJ1IjoiaHR0cHM6Ly92aWRlb3RvdXJsLmNvbS92aWRlb3Rvcy8xNzg4MjgzNzc2OTA1LWZlMDdhMDIxLTQ4ZDAtNGZjOS1hNTcyLTUyMTI5ZTVhZjRlOS53ZWJtIn0seyJjIj6IlNoYWhhZGFoX1N0dWRpb3MiLCJ0IjoiQ29yZSBkZWZlbmRlciB3YXIgMiBwbGF5ZXJzIiwidSI6Imh0dHBzOi8vdmlkZW90b3VybC5jb20vdmlkZW9zLzE3ODgzMDQ0ODg3OTMtNDAwZmY3ZjQtYjNhNy00YzgyLThiZDctMzA1MjViMmIzZTA5Lm1wNCJ9XQ==";
         const grid = document.getElementById('video-grid');
         const openModal = () => document.getElementById('link-modal').style.display = 'flex';
         const closeModal = () => document.getElementById('link-modal').style.display = 'none';
+        const getLinks = () => JSON.parse(atob(decodeURIComponent(new URLSearchParams(window.location.search).get('data') || REG)));
         function toggleSub(creator) {
             let subs = JSON.parse(localStorage.getItem('sb_local_subs') || '[]');
-            if (subs.includes(creator)) subs = subs.filter(s => s !== creator); else subs.push(creator);
-            localStorage.setItem('sb_local_subs', JSON.stringify(subs)); loadSharedLinks();
+            if (subs.includes(creator)) { subs = subs.filter(s => s !== creator); }
+            else { subs.push(creator); }
+            localStorage.setItem('sb_local_subs', JSON.stringify(subs));
+            loadSharedLinks();
         }
-        async function loadSharedLinks() {
+        function loadSharedLinks() {
             try {
-                let response = await fetch('/api/videos'); let links = await response.json();
-                let subs = JSON.parse(localStorage.getItem('sb_local_subs') || '[]');
-                links.sort((a, b) => (subs.includes(b.creator) ? 1 : 0) - (subs.includes(a.creator) ? 1 : 0));
-                grid.innerHTML = links.length === 0 ? '<div style="padding:48px; font-family:monospace; font-size:12px; color:#71717a;">No active streams inside the network bucket.</div>' : "";
-                links.forEach(item => {
+                let links = getLinks(), subs = JSON.parse(localStorage.getItem('sb_local_subs') || '[]');
+                links.sort((a, b) => (subs.includes(b.c) ? 1 : 0) - (subs.includes(a.c) ? 1 : 0));
+                grid.innerHTML = "";
+                links.forEach((item, idx) => {
                     const card = document.createElement('div'); card.className = "elite-card";
-                    let embed = item.url.includes('.mp4') || item.url.includes('.mov') || item.url.includes('.webm') ? 
-                        `<video src="${item.url}" controls></video>` : `<iframe src="${item.url.replace('watch?v=', 'embed/').replace('youtu.be/', '://youtube.com')}" allowfullscreen></iframe>`;
-                    let active = subs.includes(item.creator) ? 'active' : '', tag = item.creator || 'Anonymous';
-                    card.innerHTML = `${embed}<div class="card-content"><h3>${item.title}</h3><p>BY: ${tag}</p><button class="sub-btn ${active}" onclick="toggleSub('${tag}')">${subs.includes(tag) ? 'Subscribed' : 'Subscribe'}</button></div>`;
+                    let embed = item.u.includes('.mp4') || item.u.includes('.mov') || item.u.includes('.webm') ? 
+                        `<video src="${item.u}" controls></video>` : `<iframe src="${item.u.replace('watch?v=', 'embed/').replace('youtu.be/', '://youtube.com')}" allowfullscreen></iframe>`;
+                    let active = subs.includes(item.c) ? 'active' : '', tag = item.c || 'Anonymous';
+                    card.innerHTML = `${embed}<div class="card-content"><h3>${item.t}</h3><p>BY: ${tag}</p><button class="sub-btn ${active}" onclick="toggleSub('${tag}')">${subs.includes(tag) ? 'Subscribed' : 'Subscribe'}</button></div>`;
                     grid.appendChild(card);
                 });
-            } catch (e) { grid.innerHTML = '<div>Data pipeline loading fault.</div>'; }
+            } catch (e) { grid.innerHTML = '<div>Data corrupted.</div>'; }
         }
-        async function submitLink() {
+        function submitLink() {
             let c = document.getElementById('stream-creator').value.trim() || 'Anonymous', t = document.getElementById('stream-title').value.trim(), u = document.getElementById('stream-url').value.trim();
             if (!t || !u) return;
-            try {
-                let updateRes = await fetch('/api/videos', { method: 'POST', headers: { "Content-Type": "application/json" }, body: JSON.stringify({ creator: c, title: t, url: u }) });
-                if (updateRes.ok) { closeModal(); document.getElementById('stream-creator').value = ""; document.getElementById('stream-title').value = ""; document.getElementById('stream-url').value = ""; loadSharedLinks(); }
-            } catch (e) { alert("Pipeline execution rejected."); }
+            let links = getLinks(); links.push({ c: c, t: t, u: u });
+            let finalUrl = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(btoa(JSON.stringify(links)));
+            navigator.clipboard.writeText(finalUrl).then(() => { alert("Compressed link copied!"); window.location.href = finalUrl; }).catch(() => window.location.href = finalUrl);
+            closeModal();
         }
         loadSharedLinks();
     </script>
 </body>
 </html>
+
