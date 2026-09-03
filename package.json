@@ -1,0 +1,7 @@
+{
+  "name": "streambloxd-elite",
+  "version": "0.1.5",
+  "dependencies": {
+    "@vercel/kv": "^1.0.1"
+  }
+}
