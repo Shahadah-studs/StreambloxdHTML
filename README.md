@@ -88,10 +88,8 @@ https://streambloxd-html.vercel.app/{key}
 ```
 
 Replace `{key}` with:
-- Your user ID
-- Your custom key
-- A collection name
-- Any unique identifier
+- The New shared to you/generated on the back
+- Share your key and tell people to put the key after .app/
 
 ---
 
