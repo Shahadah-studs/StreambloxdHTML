@@ -30,8 +30,8 @@ StreambloxdHTML is a lightweight, web-based platform designed for Bloxd enthusia
 
 **Example:**
 ```
-https://streambloxd-html.vercel.app/key-123
-https://streambloxd-html.vercel.app/player-xyz
+https://streambloxd-html.vercel.app/?data=W3sidGl0bGUiOiJDb3JlIGRlZmVuZGVyIHdhciAyIHBsYXllcnMiLCJ1cmwiOiJodHRwczovL3ZpZGVvdG91cmwuY29tL3ZpZGVvcy8xNzg4MzA0NDg4NzkzLTQwMGZmN2Y0LWIzYTctNGM4Mi04YmQ3LTMwNTI1YjJiM2UwOS5tcDQifSx7InRpdGxlIjoiUFZQIDNyZCBlZGl0aW9uIiwidXJsIjoiaHR0cHM6Ly92aWRlb3RvdXJsLmNvbS92aWRlb3MvMTc4ODI4Mzc3NjkwNS1mZTA3YTAyMS00OGQwLTRmYzktYTU3Mi01MjEyOWU1YWY0ZTkud2VibSJ9XQ%3D%3D
+
 ```
 
 ### Uploading Videos
