@@ -1,5 +1,5 @@
 # StreambloxdHTML 🎬
-
+> The arabic version link : <a href="https://github.com/Shahadah-studs/StreambloxdHTML/blob/main/readmearabic.md">Readme arabic</a>
 A video storage and sharing platform built with pure HTML for the Bloxd community. Store your Bloxd gameplay videos and discover what others are sharing!
 
 **Live Demo:** [https://streambloxd-html.vercel.app](https://streambloxd-html.vercel.app)
