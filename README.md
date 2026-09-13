@@ -196,9 +196,7 @@ This project is deployed on Vercel. To deploy your own version:
 
 ## 🎯 Tips & Tricks
 
-- **Share your key** - The simpler your key, the easier it is to share
-- **Custom URLs** - Use memorable keys for better community reach
-- **Browser bookmarks** - Save frequently watched collections
+- **Share your key** - The more you share it the more people use it!
 - **Mobile-friendly** - Works great on phones and tablets
 
 ---
