@@ -6,75 +6,403 @@
     <link rel="icon" type="image/png" href="/2.png?v=1">
     <title>STREAMBLOXD NETWORK</title>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        nav { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background-color: #0b0c10; border-bottom: 1px solid #1f242e; position: sticky; top: 0; z-index: 100; }
-        .nav-title { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
-        .elite-input { padding: 8px 16px; background-color: #11141a; border: 1px solid #1f242e; color: #ffffff; font-size: 12px; font-family: monospace; border-radius: 3px; }
-        .elite-input:focus { border-color: #ffffff; outline: none; }
-        .search-container { display: none; }
-        @media (min-width: 768px) { .search-container { display: flex; flex: 1; max-width: 500px; margin: 0 32px; } .elite-input { width: 100%; } }
-        .upload-actions { display: flex; align-items: center; gap: 12px; }
-        .elite-btn { border: 1px solid #ffffff; background-color: transparent; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; padding: 8px 24px; font-size: 12px; font-weight: 600; color: #ffffff; cursor: pointer; border-radius: 3px; }
-        .elite-btn:hover { background-color: #ffffff; color: #0b0c10; }
-        .share-btn { border-color: #a1a1aa; color: #a1a1aa; }
-        .share-btn:hover { background-color: #a1a1aa; color: #0b0c10; }
-        #link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 16, 0.95); z-index: 100; align-items: center; justify-content: center; }
-        .modal-content { background: #11141a; border: 1px solid #1f242e; padding: 32px; width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; border-radius: 3px; }
-        main { width: 100%; max-width: 1400px; padding: 48px 32px; display: flex; flex-direction: column; align-items: flex-start; }
-        .header-section { margin-bottom: 40px; max-width: 640px; border-left: 2px solid #ffffff; padding-left: 16px; }
-        .header-section h1 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 30px; margin-bottom: 8px; }
-        .header-section p { color: #a1a1aa; font-size: 14px; line-height: 1.6; }
-        #video-grid { width: 100%; display: grid; grid-template-columns: 1fr; gap: 24px; }
-        @media (min-width: 640px) { #video-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (min-width: 768px) { #video-grid { grid-template-columns: repeat(3, 1fr); } }
-        @media (min-width: 1024px) { #video-grid { grid-template-columns: repeat(4, 1fr); } }
-        .elite-card { background-color: #11141a; border: 1px solid #1f242e; transition: all 0.2s ease-in-out; display: flex; flex-direction: column; justify-content: space-between; width: 100%; overflow: hidden; border-radius: 3px; }
-        .elite-card:hover { border-color: #4f5b73; transform: translateY(-2px); }
-        .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; }
-        .card-content { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
-        .card-content h3 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 14px; color: #f4f4f5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .card-content p { font-size: 12px; color: #a1a1aa; font-family: monospace; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .empty-message { grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #71717a; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase; text-align: center; }
-        .error-message { grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #ee5b5b; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase; text-align: center; }
-        .modal-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; }
-        .modal-close:hover { color: #a1a1aa; }
-        .modal-content { position: relative; }
-        h2 { text-transform: uppercase; letter-spacing: 0.05em; font-size: 16px; margin-bottom: 16px; }
+        :root {
+            --bg: #0b0c10;
+            --bg-elevated: #121720;
+            --panel: rgba(17, 20, 26, 0.92);
+            --panel-strong: #171d27;
+            --panel-soft: #1b2330;
+            --line: rgba(255,255,255,0.08);
+            --text: #f5f7fb;
+            --muted: #aeb8c9;
+            --accent: #7dd3fc;
+            --accent-strong: #38bdf8;
+            --accent-soft: rgba(125, 211, 252, 0.12);
+            --success: #6ee7b7;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --shadow: 0 18px 40px rgba(0,0,0,0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top left, rgba(56,189,248,0.14), transparent 42%),
+                radial-gradient(circle at bottom right, rgba(99,102,241,0.1), transparent 36%),
+                var(--bg);
+            color: var(--text);
+            font-family: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button, input {
+            font: inherit;
+        }
+
+        nav {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            background: rgba(11, 12, 16, 0.82);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-weight: 800;
+            font-size: clamp(0.82rem, 1.8vw, 1.25rem);
+            line-height: 1.2;
+            color: var(--text);
+        }
+
+        .nav-title::before {
+            content: "";
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), #8b5cf6);
+            box-shadow: 0 0 16px rgba(125, 211, 252, 0.75);
+        }
+
+        .search-container {
+            display: none;
+            flex: 1;
+            max-width: 540px;
+            margin: 0 12px;
+        }
+
+        .elite-input {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(17, 20, 26, 0.9);
+            border: 1px solid var(--line);
+            color: var(--text);
+            font-size: 0.82rem;
+            border-radius: 10px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .elite-input:focus {
+            border-color: rgba(125, 211, 252, 0.7);
+            box-shadow: 0 0 0 4px rgba(125, 211, 252, 0.12);
+            outline: none;
+        }
+
+        .upload-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .elite-btn {
+            border: 1px solid rgba(255,255,255,0.12);
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            transition: all 0.2s ease;
+            padding: 11px 18px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            border-radius: 10px;
+            white-space: nowrap;
+        }
+
+        .elite-btn:hover {
+            background: rgba(255,255,255,0.03);
+            border-color: rgba(125, 211, 252, 0.9);
+            transform: translateY(-1px);
+        }
+
+        .share-btn {
+            border-color: rgba(255,255,255,0.12);
+            color: var(--muted);
+        }
+
+        .share-btn:hover {
+            background: rgba(255,255,255,0.03);
+            color: var(--text);
+        }
+
+        #link-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(4, 7, 11, 0.8);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            position: relative;
+            background: linear-gradient(180deg, rgba(23,29,39,0.98), rgba(15,18,24,0.98));
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 28px 22px 22px;
+            width: min(100%, 500px);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            box-shadow: var(--shadow);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            color: var(--muted);
+            font-size: 1.7rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .modal-content h2 {
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.82rem;
+            margin-bottom: 8px;
+            color: var(--accent);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 4px;
+        }
+
+        main {
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px 54px;
+        }
+
+        .header-section {
+            margin-bottom: 30px;
+            max-width: 740px;
+            padding-left: 18px;
+            border-left: 2px solid rgba(125, 211, 252, 0.85);
+        }
+
+        .header-section h1 {
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            line-height: 1.06;
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+
+        .header-section p {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.7;
+            max-width: 640px;
+        }
+
+        #video-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        @media (min-width: 640px) {
+            #video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+
+        @media (min-width: 920px) {
+            #video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        }
+
+        @media (min-width: 1200px) {
+            #video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        }
+
+        @media (min-width: 768px) {
+            .search-container { display: flex; }
+        }
+
+        .elite-card {
+            background: linear-gradient(180deg, rgba(17, 20, 26, 0.95), rgba(15,18,24,0.95));
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.18);
+        }
+
+        .elite-card:hover {
+            transform: translateY(-2px);
+            border-color: rgba(125, 211, 252, 0.7);
+            box-shadow: 0 18px 34px rgba(8, 15, 24, 0.35);
+        }
+
+        .elite-card iframe {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
+            border: 0;
+            display: block;
+        }
+
+        .card-content {
+            padding: 18px 16px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card-content h3 {
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-weight: 800;
+            font-size: 0.8rem;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .card-content p {
+            font-size: 0.7rem;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+        }
+
+        .empty-message,
+        .error-message {
+            grid-column: 1 / -1;
+            text-align: center;
+            font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 54px 24px;
+            border-radius: 18px;
+            border: 1px dashed rgba(255,255,255,0.12);
+            background: rgba(17,20,26,0.6);
+        }
+
+        .empty-message {
+            color: var(--muted);
+        }
+
+        .error-message {
+            color: #fca5a5;
+            border-color: rgba(248, 113, 113, 0.4);
+        }
+
+        @media (max-width: 640px) {
+            nav {
+                padding: 16px 14px;
+                flex-wrap: wrap;
+            }
+
+            .upload-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .elite-btn {
+                flex: 1;
+                min-width: 120px;
+                text-align: center;
+            }
+
+            .header-section {
+                padding-left: 14px;
+                margin-bottom: 22px;
+            }
+
+            .header-section p {
+                font-size: 0.82rem;
+            }
+        }
     </style>
 </head>
 <body>
     <nav>
-        <div class="nav-title">SHAHADAH STUDIOS ELITE,<br>STREAMBLOXD</div>
+        <div class="nav-title">SHAHADAH STUDIOS<br>STREAMBLOXD</div>
         <div class="search-container"><input type="text" placeholder="Search architecture database..." class="elite-input"></div>
         <div class="upload-actions">
             <button class="elite-btn share-btn" onclick="copyCurrentRegistry()">Share Feed</button>
-            <button class="elite-btn" onclick="openModal()">Upload Videos</button>
+            <button class="elite-btn" onclick="openModal()">Upload Video</button>
         </div>
     </nav>
+
     <div id="link-modal">
         <div class="modal-content">
-            <button class="modal-close" onclick="closeModal()">×</button>
+            <button class="modal-close" onclick="closeModal()" aria-label="Close">×</button>
             <h2>Inject Stream</h2>
             <input type="text" id="stream-title" placeholder="Enter stream title..." class="elite-input">
-            <input type="text" id="stream-url" placeholder="Paste Your Video link..." class="elite-input">
-            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
-                <button class="elite-btn" style="padding: 6px 16px;" onclick="closeModal()">Cancel</button>
-                <button class="elite-btn" style="padding: 6px 16px; background-color: #ffffff; color: #0b0c10;" onclick="submitLink()">Inject</button>
+            <input type="text" id="stream-url" placeholder="Paste your video link..." class="elite-input">
+            <div class="modal-actions">
+                <button class="elite-btn share-btn" onclick="closeModal()">Cancel</button>
+                <button class="elite-btn" onclick="submitLink()">Inject</button>
             </div>
         </div>
     </div>
+
     <main>
         <div class="header-section">
             <h1>Standalone Video Pipeline</h1>
-            <p>High-performance, network-driven iframe architectures built with zero local data overhead files.</p>
+            <p>High-performance, network-driven iframe architectures built for a cleaner, more focused viewing experience.</p>
         </div>
         <div id="video-grid"></div>
     </main>
+
     <script>
         const videoGrid = document.getElementById('video-grid');
-        function openModal() { document.getElementById('link-modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('link-modal').style.display = 'none'; }
+
+        function openModal() {
+            document.getElementById('link-modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('link-modal').style.display = 'none';
+        }
+
         function formatEmbedUrl(url) {
             if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/');
             if (url.includes('youtu.be/')) return url.replace('youtu.be/', '://youtube.com/embed/');
@@ -84,20 +412,24 @@
             }
             return url;
         }
+
         function loadSharedLinks() {
             const params = new URLSearchParams(window.location.search);
             const rawData = params.get('data');
+
             if (!rawData) {
-                videoGrid.innerHTML = '<div class="empty-message">NO VIDEOS IN CURRENT STREAM. INJECT A VIDEO OR SHARE A LINK.</div>';
+                videoGrid.innerHTML = '<div class="empty-message">No videos in current stream. Inject a video or share a link.</div>';
                 return;
             }
+
             try {
                 const links = JSON.parse(atob(decodeURIComponent(rawData)));
-                videoGrid.innerHTML = "";
+                videoGrid.innerHTML = '';
+
                 links.reverse().forEach(item => {
                     const embedUrl = formatEmbedUrl(item.url);
                     const card = document.createElement('div');
-                    card.className = "elite-card";
+                    card.className = 'elite-card';
                     card.innerHTML = `
                         <iframe src="${embedUrl}" allowfullscreen></iframe>
                         <div class="card-content">
@@ -108,29 +440,38 @@
                     videoGrid.appendChild(card);
                 });
             } catch (e) {
-                videoGrid.innerHTML = '<div class="error-message">INVALID STREAM DATA. PLEASE CHECK THE LINK.</div>';
+                videoGrid.innerHTML = '<div class="error-message">Invalid stream data. Please check the link.</div>';
             }
         }
+
         function submitLink() {
             const titleInput = document.getElementById('stream-title').value.trim();
             const urlInput = document.getElementById('stream-url').value.trim();
+
             if (!titleInput || !urlInput) return;
+
             const params = new URLSearchParams(window.location.search);
             const rawData = params.get('data');
             let currentLinks = [];
+
             if (rawData) {
-                try { currentLinks = JSON.parse(atob(decodeURIComponent(rawData))); } catch(e) {}
+                try {
+                    currentLinks = JSON.parse(atob(decodeURIComponent(rawData)));
+                } catch (e) {}
             }
+
             currentLinks.push({ title: titleInput, url: urlInput });
             const crypted = btoa(JSON.stringify(currentLinks));
             window.location.href = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(crypted);
             closeModal();
         }
+
         function copyCurrentRegistry() {
             navigator.clipboard.writeText(window.location.href).then(() => {
-                alert("Current video grid link copied to clipboard! Share this URL with your crew.");
+                alert('Current video grid link copied to clipboard.');
             });
         }
+
         loadSharedLinks();
     </script>
 </body>
