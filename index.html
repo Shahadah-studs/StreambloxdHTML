@@ -3,966 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>StreamBloxd - Elite Video Matrix</title>
-    <script src="https://npmcdn.com/parse@latest/dist/parse.min.js"></script>
+    <link rel="icon" type="image/png" href="/2.png?v=1">
+    <title>STREAMBLOXD NETWORK</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0b0c10;
-            --bg-secondary: #11141a;
-            --bg-tertiary: #1f242e;
-            --text-primary: #ffffff;
-            --text-secondary: #b0b0b0;
-            --accent-cyan: #00d4ff;
-            --accent-purple: #9d00ff;
-            --accent-green: #00ff88;
-            --border-color: #1f242e;
-        }
-
-        html, body {
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
-            overflow-x: hidden;
-        }
-
-        .navbar {
-            background-color: var(--bg-secondary);
-            border-bottom: 2px solid var(--border-color);
-            padding: 1rem 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--accent-cyan);
-            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-        }
-
-        .navbar-content {
-            display: flex;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        .user-section {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .username-display {
-            font-size: 0.9rem;
-            color: var(--accent-green);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .badges-container {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-            max-width: 300px;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
-            color: var(--bg-primary);
-            padding: 0.3rem 0.8rem;
-            border-radius: 3px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 8px rgba(157, 0, 255, 0.3);
-        }
-
-        .btn {
-            padding: 0.7rem 1.5rem;
-            border: 2px solid var(--accent-cyan);
-            background-color: var(--bg-primary);
-            color: var(--accent-cyan);
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border-radius: 3px;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-cyan);
-            color: var(--bg-primary);
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-        }
-
-        .btn-secondary {
-            border-color: var(--accent-green);
-            color: var(--accent-green);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--accent-green);
-            color: var(--bg-primary);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 2rem;
-        }
-
-        .header h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            color: var(--text-primary);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 0.95rem;
-            letter-spacing: 1px;
-        }
-
-        .controls {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 2rem;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .video-card {
-            background-color: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 5px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        .video-card:hover {
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
-            transform: translateY(-5px);
-        }
-
-        .video-embed-container {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            background-color: var(--bg-primary);
-            overflow: hidden;
-        }
-
-        .video-embed-container iframe,
-        .video-embed-container video {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-            background: #000;
-        }
-
-        .video-info {
-            padding: 1.5rem;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .video-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 1rem;
-            color: var(--accent-cyan);
-            word-break: break-word;
-        }
-
-        .video-meta {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 1rem;
-        }
-
-        .video-author {
-            color: var(--accent-green);
-            margin-bottom: 0.5rem;
-        }
-
-        .video-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .video-btn {
-            flex: 1;
-            padding: 0.5rem 1rem;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-tertiary);
-            color: var(--text-secondary);
-            font-family: 'Courier New', monospace;
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            cursor: pointer;
-            border-radius: 3px;
-            transition: all 0.2s ease;
-        }
-
-        .video-btn:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(5px);
-        }
-
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: var(--bg-secondary);
-            border: 2px solid var(--accent-cyan);
-            border-radius: 5px;
-            padding: 2rem;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-            animation: slideIn 0.3s ease;
-            position: relative;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 1.5rem;
-            color: var(--accent-cyan);
-            text-align: center;
-        }
-
-        .modal-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .modal-tab {
-            flex: 1;
-            padding: 0.75rem;
-            text-align: center;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .modal-tab.active {
-            color: var(--accent-cyan);
-            border-bottom-color: var(--accent-cyan);
-        }
-
-        .modal-tab:hover {
-            color: var(--accent-cyan);
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 0.5rem;
-            color: var(--accent-green);
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 2px solid var(--border-color);
-            background-color: var(--bg-primary);
-            color: var(--text-primary);
-            font-family: 'Courier New', monospace;
-            font-size: 0.9rem;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--accent-cyan);
-            box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
-        }
-
-        .form-input::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-
-        .modal-actions button {
-            flex: 1;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            color: var(--accent-cyan);
-            font-size: 2rem;
-            cursor: pointer;
-            position: absolute;
-            top: 1rem;
-            right: 1.5rem;
-            transition: all 0.2s ease;
-        }
-
-        .close-btn:hover {
-            color: var(--accent-green);
-            text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
-        }
-
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: var(--accent-cyan);
-            font-size: 0.95rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .spinner {
-            display: inline-block;
-            width: 30px;
-            height: 30px;
-            border: 3px solid var(--border-color);
-            border-top-color: var(--accent-cyan);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 1rem;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .status-message {
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 3px;
-            text-align: center;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .status-success {
-            background-color: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--accent-green);
-            color: var(--accent-green);
-        }
-
-        .status-error {
-            background-color: rgba(255, 0, 100, 0.1);
-            border: 1px solid #ff0064;
-            color: #ff0064;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            color: var(--text-secondary);
-        }
-
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-
-        .empty-state-text {
-            font-size: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        @media (max-width: 768px) {
-            .navbar {
-                flex-direction: column;
-                gap: 1rem;
-            }
-
-            .navbar-content {
-                flex-direction: column;
-                width: 100%;
-            }
-
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .badges-container {
-                max-width: 100%;
-            }
-
-            .modal-content {
-                max-width: 90%;
-            }
-
-            .header h1 {
-                font-size: 1.8rem;
-            }
-
-            .controls {
-                flex-direction: column;
-            }
-
-            .controls button {
-                width: 100%;
-            }
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background-color: #0b0c10; color: #ffffff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        nav { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 32px; background-color: #0b0c10; border-bottom: 1px solid #1f242e; position: sticky; top: 0; z-index: 100; }
+        .nav-title { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 20px; display: flex; align-items: center; gap: 8px; }
+        .elite-input { padding: 8px 16px; background-color: #11141a; border: 1px solid #1f242e; color: #ffffff; font-size: 12px; font-family: monospace; border-radius: 3px; }
+        .elite-input:focus { border-color: #ffffff; outline: none; }
+        .search-container { display: none; }
+        @media (min-width: 768px) { .search-container { display: flex; flex: 1; max-width: 500px; margin: 0 32px; } .elite-input { width: 100%; } }
+        .upload-actions { display: flex; align-items: center; gap: 12px; }
+        .elite-btn { border: 1px solid #ffffff; background-color: transparent; text-transform: uppercase; letter-spacing: 0.05em; transition: all 0.2s ease; padding: 8px 24px; font-size: 12px; font-weight: 600; color: #ffffff; cursor: pointer; border-radius: 3px; }
+        .elite-btn:hover { background-color: #ffffff; color: #0b0c10; }
+        .share-btn { border-color: #a1a1aa; color: #a1a1aa; }
+        .share-btn:hover { background-color: #a1a1aa; color: #0b0c10; }
+        #link-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(11, 12, 16, 0.95); z-index: 100; align-items: center; justify-content: center; }
+        .modal-content { background: #11141a; border: 1px solid #1f242e; padding: 32px; width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 16px; border-radius: 3px; }
+        main { width: 100%; max-width: 1400px; padding: 48px 32px; display: flex; flex-direction: column; align-items: flex-start; }
+        .header-section { margin-bottom: 40px; max-width: 640px; border-left: 2px solid #ffffff; padding-left: 16px; }
+        .header-section h1 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 30px; margin-bottom: 8px; }
+        .header-section p { color: #a1a1aa; font-size: 14px; line-height: 1.6; }
+        #video-grid { width: 100%; display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 640px) { #video-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 768px) { #video-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (min-width: 1024px) { #video-grid { grid-template-columns: repeat(4, 1fr); } }
+        .elite-card { background-color: #11141a; border: 1px solid #1f242e; transition: all 0.2s ease-in-out; display: flex; flex-direction: column; justify-content: space-between; width: 100%; overflow: hidden; border-radius: 3px; }
+        .elite-card:hover { border-color: #4f5b73; transform: translateY(-2px); }
+        .elite-card iframe { width: 100%; aspect-ratio: 16/9; background-color: #000000; border: none; }
+        .card-content { padding: 20px; display: flex; flex-direction: column; gap: 4px; }
+        .card-content h3 { text-transform: uppercase; letter-spacing: 0.05em; font-weight: 800; font-size: 14px; color: #f4f4f5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-content p { font-size: 12px; color: #a1a1aa; font-family: monospace; margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .empty-message { grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #71717a; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase; text-align: center; }
+        .error-message { grid-column: 1/-1; font-family: monospace; font-size: 12px; color: #ee5b5b; border: 1px dashed #1f242e; padding: 48px; text-transform: uppercase; text-align: center; }
+        .modal-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: #ffffff; font-size: 24px; cursor: pointer; }
+        .modal-close:hover { color: #a1a1aa; }
+        .modal-content { position: relative; }
+        h2 { text-transform: uppercase; letter-spacing: 0.05em; font-size: 16px; margin-bottom: 16px; }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="navbar-brand">▌ StreamBloxd ▌</div>
-        <div class="navbar-content">
-            <div id="authContainer">
-                <button class="btn" id="authToggle">SIGN IN / JOIN</button>
-            </div>
-            <div id="userContainer" style="display: none;" class="user-section">
-                <div class="username-display">USER: <span id="usernameDisplay">---</span></div>
-                <div class="badges-container" id="badgesDisplay"></div>
-                <button class="btn btn-secondary" id="signOutBtn">SIGN OUT</button>
-            </div>
+    <nav>
+        <div class="nav-title">SHAHADAH STUDIOS ELITE,<br>STREAMBLOXD</div>
+        <div class="search-container"><input type="text" placeholder="Search architecture database..." class="elite-input"></div>
+        <div class="upload-actions">
+            <button class="elite-btn share-btn" onclick="copyCurrentRegistry()">Share Feed</button>
+            <button class="elite-btn" onclick="openModal()">Upload Videos</button>
         </div>
     </nav>
-
-    <div class="container">
-        <div class="header">
-            <h1>ELITE VIDEO MATRIX</h1>
-            <p>// DISTRIBUTED VIDEO ARCHIVE NETWORK //</p>
-        </div>
-
-        <div id="statusContainer"></div>
-
-        <div class="controls">
-            <button class="btn" id="uploadVideoBtn" style="display: none;">+ INJECT VIDEO</button>
-            <button class="btn btn-secondary" id="refreshBtn">⟳ REFRESH STREAM</button>
-        </div>
-
-        <div id="videoContainer">
-            <div class="empty-state">
-                <div class="empty-state-icon">━━━</div>
-                <div class="empty-state-text">INITIALIZING STREAM...</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="authModal" class="modal">
+    <div id="link-modal">
         <div class="modal-content">
-            <button class="close-btn" id="closeAuthModal">&times;</button>
-
-            <div class="modal-header">AUTHENTICATION PROTOCOL</div>
-
-            <div class="modal-tabs">
-                <div class="modal-tab active" data-tab="login">LOGIN</div>
-                <div class="modal-tab" data-tab="signup">SIGNUP</div>
-            </div>
-
-            <div id="loginTab" class="tab-content">
-                <div class="form-group">
-                    <label class="form-label">USERNAME</label>
-                    <input type="text" id="loginUsername" class="form-input" placeholder="Enter your username">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">PASSWORD</label>
-                    <input type="password" id="loginPassword" class="form-input" placeholder="Enter your password">
-                </div>
-                <div class="modal-actions">
-                    <button class="btn" id="loginBtn">LOGIN</button>
-                    <button class="btn btn-secondary" id="closeLoginBtn">CANCEL</button>
-                </div>
-            </div>
-
-            <div id="signupTab" class="tab-content" style="display: none;">
-                <div class="form-group">
-                    <label class="form-label">USERNAME</label>
-                    <input type="text" id="signupUsername" class="form-input" placeholder="Choose a username">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">EMAIL</label>
-                    <input type="email" id="signupEmail" class="form-input" placeholder="Enter your email">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">PASSWORD</label>
-                    <input type="password" id="signupPassword" class="form-input" placeholder="Create a password">
-                </div>
-                <div class="modal-actions">
-                    <button class="btn" id="signupBtn">CREATE ACCOUNT</button>
-                    <button class="btn btn-secondary" id="closeSignupBtn">CANCEL</button>
-                </div>
+            <button class="modal-close" onclick="closeModal()">×</button>
+            <h2>Inject Stream</h2>
+            <input type="text" id="stream-title" placeholder="Enter stream title..." class="elite-input">
+            <input type="text" id="stream-url" placeholder="Paste Your Video link..." class="elite-input">
+            <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 8px;">
+                <button class="elite-btn" style="padding: 6px 16px;" onclick="closeModal()">Cancel</button>
+                <button class="elite-btn" style="padding: 6px 16px; background-color: #ffffff; color: #0b0c10;" onclick="submitLink()">Inject</button>
             </div>
         </div>
     </div>
-
-    <div id="uploadModal" class="modal">
-        <div class="modal-content">
-            <button class="close-btn" id="closeUploadModal">&times;</button>
-
-            <div class="modal-header">INJECT VIDEO</div>
-
-            <div class="form-group">
-                <label class="form-label">VIDEO TITLE</label>
-                <input type="text" id="videoTitle" class="form-input" placeholder="Enter video title">
-            </div>
-            <div class="form-group">
-                <label class="form-label">VIDEO URL</label>
-                <input type="url" id="videoUrl" class="form-input" placeholder="Paste YouTube or Vimeo link">
-            </div>
-            <div class="form-group">
-                <small style="color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px;">
-                    SUPPORTS: YouTube, Vimeo, Direct MP4 URLs
-                </small>
-            </div>
-
-            <div class="modal-actions">
-                <button class="btn" id="submitVideoBtn">INJECT</button>
-                <button class="btn btn-secondary" id="closeUploadBtn">CANCEL</button>
-            </div>
+    <main>
+        <div class="header-section">
+            <h1>Standalone Video Pipeline</h1>
+            <p>High-performance, network-driven iframe architectures built with zero local data overhead files.</p>
         </div>
-    </div>
-
+        <div id="video-grid"></div>
+    </main>
     <script>
-        Parse.initialize("YOUR_APPLICATION_ID", "YOUR_JAVASCRIPT_KEY");
-        Parse.serverURL = "https://back4app.com";
-
-        let currentUser = null;
-        const state = {
-            isAuthenticated: false,
-            videos: [],
-            userBadges: []
-        };
-
-        function showStatus(message, type = 'success') {
-            const statusContainer = document.getElementById('statusContainer');
-            const statusEl = document.createElement('div');
-            statusEl.className = `status-message status-${type}`;
-            statusEl.textContent = message;
-            statusContainer.innerHTML = '';
-            statusContainer.appendChild(statusEl);
-            setTimeout(() => statusEl.remove(), 4000);
-        }
-
+        const videoGrid = document.getElementById('video-grid');
+        function openModal() { document.getElementById('link-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('link-modal').style.display = 'none'; }
         function formatEmbedUrl(url) {
-            if (!url) return '';
-
-            const cleanUrl = url.trim();
-
-            if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be')) {
-                let videoId = '';
-                if (cleanUrl.includes('youtu.be/')) {
-                    videoId = cleanUrl.split('youtu.be/')[1].split('?')[0];
-                } else if (cleanUrl.includes('watch?v=')) {
-                    videoId = cleanUrl.split('watch?v=')[1].split('&')[0];
-                } else if (cleanUrl.includes('/embed/')) {
-                    videoId = cleanUrl.split('/embed/')[1].split('?')[0];
-                }
-                if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+            if (url.includes('watch?v=')) return url.replace('watch?v=', 'embed/');
+            if (url.includes('youtu.be/')) return url.replace('youtu.be/', '://youtube.com/embed/');
+            if (url.includes('vimeo.com')) {
+                const match = url.match(/vimeo\.com\/(\d+)/);
+                if (match) return `https://player.vimeo.com/video/${match[1]}`;
             }
-
-            if (cleanUrl.includes('vimeo.com')) {
-                const match = cleanUrl.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
-                if (match && match[1]) return `https://player.vimeo.com/video/${match[1]}`;
-            }
-
-            if (cleanUrl.endsWith('.mp4') || cleanUrl.endsWith('.webm') || cleanUrl.includes('/video/')) {
-                return cleanUrl;
-            }
-
-            return cleanUrl;
+            return url;
         }
-
-        function showModal(modalId) {
-            document.getElementById(modalId).classList.add('active');
-        }
-
-        function hideModal(modalId) {
-            document.getElementById(modalId).classList.remove('active');
-        }
-
-        async function login(username, password) {
-            try {
-                currentUser = await Parse.User.logIn(username, password);
-                state.isAuthenticated = true;
-                await updateUserUI();
-                await fetchVideos();
-                showStatus('LOGIN SUCCESSFUL', 'success');
-                hideModal('authModal');
-            } catch (error) {
-                console.error('Login error:', error);
-                showStatus(error.message, 'error');
-            }
-        }
-
-        async function signup(username, email, password) {
-            try {
-                const user = new Parse.User();
-                user.set('username', username);
-                user.set('email', email);
-                user.set('password', password);
-                user.set('badges', ['Newbie']);
-                await user.signUp();
-
-                currentUser = user;
-                state.isAuthenticated = true;
-                await updateUserUI();
-                showStatus('ACCOUNT CREATED SUCCESSFULLY', 'success');
-                hideModal('authModal');
-            } catch (error) {
-                console.error('Signup error:', error);
-                showStatus(error.message, 'error');
-            }
-        }
-
-        async function logout() {
-            try {
-                await Parse.User.logOut();
-                currentUser = null;
-                state.isAuthenticated = false;
-                updateUserUI();
-                await fetchVideos();
-                showStatus('LOGGED OUT', 'success');
-            } catch (error) {
-                console.error('Logout error:', error);
-                showStatus(error.message, 'error');
-            }
-        }
-
-        async function updateUserUI() {
-            const authContainer = document.getElementById('authContainer');
-            const userContainer = document.getElementById('userContainer');
-            const uploadBtn = document.getElementById('uploadVideoBtn');
-
-            if (Parse.User.current() && Parse.User.current().authenticated) {
-                currentUser = Parse.User.current();
-                state.isAuthenticated = true;
-                authContainer.style.display = 'none';
-                userContainer.style.display = 'flex';
-                uploadBtn.style.display = 'block';
-
-                const username = currentUser.get('username') || 'UNNAMED';
-                document.getElementById('usernameDisplay').textContent = username;
-
-                const badges = currentUser.get('badges') || ['Newbie'];
-                const badgesContainer = document.getElementById('badgesDisplay');
-                badgesContainer.innerHTML = badges.map(badge => `<span class="badge">${badge}</span>`).join('');
-            } else {
-                state.isAuthenticated = false;
-                authContainer.style.display = 'block';
-                userContainer.style.display = 'none';
-                uploadBtn.style.display = 'none';
-                document.getElementById('badgesDisplay').innerHTML = '';
-            }
-        }
-
-        async function uploadVideo(title, url) {
-            if (!currentUser) {
-                showStatus('PLEASE LOG IN FIRST', 'error');
+        function loadSharedLinks() {
+            const params = new URLSearchParams(window.location.search);
+            const rawData = params.get('data');
+            if (!rawData) {
+                videoGrid.innerHTML = '<div class="empty-message">NO VIDEOS IN CURRENT STREAM. INJECT A VIDEO OR SHARE A LINK.</div>';
                 return;
             }
-
             try {
-                const Video = Parse.Object.extend('Video');
-                const video = new Video();
-                video.set('title', title);
-                video.set('url', url);
-                video.set('user', currentUser);
-                await video.save();
-
-                const userVideos = await new Parse.Query('Video').equalTo('user', currentUser).count();
-                if (userVideos === 1) {
-                    const badges = currentUser.get('badges') || [];
-                    if (!badges.includes('Uploader')) {
-                        badges.push('Uploader');
-                        currentUser.set('badges', badges);
-                        await currentUser.save();
-                    }
-                }
-
-                await updateUserUI();
-                await fetchVideos();
-                showStatus('VIDEO INJECTED SUCCESSFULLY', 'success');
-                hideModal('uploadModal');
-                document.getElementById('videoTitle').value = '';
-                document.getElementById('videoUrl').value = '';
-            } catch (error) {
-                console.error('Upload error:', error);
-                showStatus(error.message, 'error');
-            }
-        }
-
-        async function fetchVideos() {
-            try {
-                const videoContainer = document.getElementById('videoContainer');
-                videoContainer.innerHTML = '<div class="loading"><div class="spinner"></div>FETCHING STREAM...</div>';
-
-                const Video = Parse.Object.extend('Video');
-                const query = new Parse.Query(Video);
-                query.include('user');
-                query.descending('createdAt');
-                const videos = await query.find();
-
-                if (!videos.length) {
-                    videoContainer.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">∅</div>
-                            <div class="empty-state-text">NO VIDEOS IN STREAM YET</div>
-                            <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
-                                ${state.isAuthenticated ? 'CLICK "INJECT VIDEO" TO ADD CONTENT' : 'LOGIN AND START UPLOADING'}
-                            </div>
+                const links = JSON.parse(atob(decodeURIComponent(rawData)));
+                videoGrid.innerHTML = "";
+                links.reverse().forEach(item => {
+                    const embedUrl = formatEmbedUrl(item.url);
+                    const card = document.createElement('div');
+                    card.className = "elite-card";
+                    card.innerHTML = `
+                        <iframe src="${embedUrl}" allowfullscreen></iframe>
+                        <div class="card-content">
+                            <h3>${item.title.toUpperCase()}</h3>
+                            <p>SOURCE: ${item.url}</p>
                         </div>
                     `;
-                    return;
-                }
-
-                const html = videos.map(video => {
-                    const title = video.get('title') || 'UNTITLED';
-                    const rawUrl = video.get('url') || '';
-                    const embedUrl = formatEmbedUrl(rawUrl);
-                    const uploader = video.get('user');
-                    const uploaderName = uploader ? uploader.get('username') || 'UNKNOWN' : 'UNKNOWN';
-                    const isOwner = currentUser && uploader && currentUser.id === uploader.id;
-
-                    let mediaMarkup = '';
-                    if (embedUrl.includes('youtube.com/embed') || embedUrl.includes('player.vimeo.com')) {
-                        mediaMarkup = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
-                    } else if (embedUrl.endsWith('.mp4') || embedUrl.endsWith('.webm')) {
-                        mediaMarkup = `<video controls><source src="${embedUrl}" /></video>`;
-                    } else {
-                        mediaMarkup = `<iframe src="${embedUrl}" allowfullscreen></iframe>`;
-                    }
-
-                    return `
-                        <div class="video-card">
-                            <div class="video-embed-container">
-                                ${mediaMarkup}
-                            </div>
-                            <div class="video-info">
-                                <div>
-                                    <div class="video-title">${title.toUpperCase()}</div>
-                                    <div class="video-meta">
-                                        <div class="video-author">USER: ${uploaderName.toUpperCase()}</div>
-                                        <div>POSTED: ${new Date(video.createdAt).toLocaleDateString()}</div>
-                                    </div>
-                                </div>
-                                <div class="video-actions">
-                                    <button class="video-btn" onclick="copyVideoLink('${video.id}')">SHARE</button>
-                                    ${isOwner ? `<button class="video-btn" onclick="deleteVideo('${video.id}')">DELETE</button>` : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-
-                videoContainer.innerHTML = `<div class="video-grid">${html}</div>`;
-            } catch (error) {
-                console.error('Fetch videos error:', error);
-                showStatus('ERROR FETCHING VIDEOS', 'error');
-            }
-        }
-
-        async function deleteVideo(videoId) {
-            if (!confirm('CONFIRM DELETE?')) return;
-
-            try {
-                const Video = Parse.Object.extend('Video');
-                const query = new Parse.Query(Video);
-                const video = await query.get(videoId);
-                await video.destroy();
-                await fetchVideos();
-                showStatus('VIDEO DELETED', 'success');
-            } catch (error) {
-                console.error('Delete video error:', error);
-                showStatus('FAILED TO DELETE VIDEO', 'error');
-            }
-        }
-
-        function copyVideoLink(videoId) {
-            const url = `${window.location.origin}${window.location.pathname}?video=${videoId}`;
-            navigator.clipboard.writeText(url)
-                .then(() => showStatus('VIDEO LINK COPIED', 'success'))
-                .catch(() => showStatus('COPY FAILED', 'error'));
-        }
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            currentUser = Parse.User.current();
-            if (currentUser) {
-                state.isAuthenticated = true;
-            }
-            await updateUserUI();
-            await fetchVideos();
-
-            document.querySelectorAll('.modal-tab').forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.dataset.tab;
-                    document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    document.getElementById('loginTab').style.display = target === 'login' ? 'block' : 'none';
-                    document.getElementById('signupTab').style.display = target === 'signup' ? 'block' : 'none';
+                    videoGrid.appendChild(card);
                 });
+            } catch (e) {
+                videoGrid.innerHTML = '<div class="error-message">INVALID STREAM DATA. PLEASE CHECK THE LINK.</div>';
+            }
+        }
+        function submitLink() {
+            const titleInput = document.getElementById('stream-title').value.trim();
+            const urlInput = document.getElementById('stream-url').value.trim();
+            if (!titleInput || !urlInput) return;
+            const params = new URLSearchParams(window.location.search);
+            const rawData = params.get('data');
+            let currentLinks = [];
+            if (rawData) {
+                try { currentLinks = JSON.parse(atob(decodeURIComponent(rawData))); } catch(e) {}
+            }
+            currentLinks.push({ title: titleInput, url: urlInput });
+            const crypted = btoa(JSON.stringify(currentLinks));
+            window.location.href = window.location.origin + window.location.pathname + '?data=' + encodeURIComponent(crypted);
+            closeModal();
+        }
+        function copyCurrentRegistry() {
+            navigator.clipboard.writeText(window.location.href).then(() => {
+                alert("Current video grid link copied to clipboard! Share this URL with your crew.");
             });
-
-            document.getElementById('authToggle').addEventListener('click', () => showModal('authModal'));
-            document.getElementById('closeAuthModal').addEventListener('click', () => hideModal('authModal'));
-            document.getElementById('closeLoginBtn').addEventListener('click', () => hideModal('authModal'));
-            document.getElementById('closeSignupBtn').addEventListener('click', () => hideModal('authModal'));
-
-            document.getElementById('loginBtn').addEventListener('click', async () => {
-                const username = document.getElementById('loginUsername').value.trim();
-                const password = document.getElementById('loginPassword').value.trim();
-
-                if (!username || !password) {
-                    showStatus('PLEASE FILL ALL FIELDS', 'error');
-                    return;
-                }
-
-                await login(username, password);
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-            });
-
-            document.getElementById('signupBtn').addEventListener('click', async () => {
-                const username = document.getElementById('signupUsername').value.trim();
-                const email = document.getElementById('signupEmail').value.trim();
-                const password = document.getElementById('signupPassword').value.trim();
-
-                if (!username || !email || !password) {
-                    showStatus('PLEASE FILL ALL FIELDS', 'error');
-                    return;
-                }
-
-                await signup(username, email, password);
-                document.getElementById('signupUsername').value = '';
-                document.getElementById('signupEmail').value = '';
-                document.getElementById('signupPassword').value = '';
-            });
-
-            document.getElementById('uploadVideoBtn').addEventListener('click', () => showModal('uploadModal'));
-            document.getElementById('closeUploadModal').addEventListener('click', () => hideModal('uploadModal'));
-            document.getElementById('closeUploadBtn').addEventListener('click', () => hideModal('uploadModal'));
-
-            document.getElementById('submitVideoBtn').addEventListener('click', async () => {
-                const title = document.getElementById('videoTitle').value.trim();
-                const url = document.getElementById('videoUrl').value.trim();
-
-                if (!title || !url) {
-                    showStatus('PLEASE FILL ALL FIELDS', 'error');
-                    return;
-                }
-
-                await uploadVideo(title, url);
-            });
-
-            document.getElementById('signOutBtn').addEventListener('click', logout);
-            document.getElementById('refreshBtn').addEventListener('click', fetchVideos);
-
-            window.addEventListener('click', event => {
-                if (event.target.classList.contains('modal')) {
-                    event.target.classList.remove('active');
-                }
-            });
-
-            document.getElementById('loginPassword').addEventListener('keydown', event => {
-                if (event.key === 'Enter') document.getElementById('loginBtn').click();
-            });
-
-            document.getElementById('signupPassword').addEventListener('keydown', event => {
-                if (event.key === 'Enter') document.getElementById('signupBtn').click();
-            });
-
-            document.getElementById('videoUrl').addEventListener('keydown', event => {
-                if (event.key === 'Enter') document.getElementById('submitVideoBtn').click();
-            });
-        });
+        }
+        loadSharedLinks();
     </script>
 </body>
 </html>
