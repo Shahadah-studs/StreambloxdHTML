@@ -217,4 +217,4 @@ Created by [@Shahadah-studs](https://github.com/Shahadah-studs) for the Bloxd co
 
 **Happy streaming! 🎬**
 
-For more information, visit the [live application](https://streambloxd-html.vercel.app) or check out the [GitHub repository](https://github.com/Shahadah-studs/StreambloxdHTML).
+For more information, visit the [live application](https://streambloxd-html.vercel.app/?data=W3sidGl0bGUiOiJMb2NhbCB0ZXh0IiwidXJsIjoiaHR0cHM6Ly93d3cuaW1hZ2UydXJsLmNvbS9yMi9kZWZhdWx0L3ZpZGVvcy8xNzg2MzE1MDQ1NzU3LTNjZWI3MzI2LTA2Y2MtNDFiNy05ODVhLTJiM2RjOTU3NWExZS5tcDQifSx7InRpdGxlIjoiTG9jYWwgdGV4dDIiLCJ1cmwiOiJodHRwczovL3ZpZGVvdG91cmwuY29tL3ZpZGVvcy8xNzg4MjgzNzc2OTA1LWZlMDdhMDIxLTQ4ZDAtNGZjOS1hNTcyLTUyMTI5ZTVhZjRlOS53ZWJtIn0seyJ0aXRsZSI6IkNvcmUgZGVmZW5kZXIgd2FyIDIgcGxheWVycyIsInVybCI6Imh0dHBzOi8vdmlkZW90b3VybC5jb20vdmlkZW9zLzE3ODgzMDQ0ODg3OTMtNDAwZmY3ZjQtYjNhNy00YzgyLThiZDctMzA1MjViMmIzZTA5Lm1wNCJ9XQ%3D%3D).
